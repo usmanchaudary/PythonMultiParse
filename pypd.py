@@ -5,14 +5,18 @@ import io
 import matplotlib.pyplot as plt
 
 #recieve and read env file 
-file_path = sys.argv[1]
+file_path =  sys.argv[1]
+variables_path = sys.argv[3]
 print(file_path)
 tables = {}
+variables = {}
 result = {}
 plots = {}
 #with -> using. opening json file in read mode. 'f' would be range variable 
 with open(file_path, 'r') as f:
   input_json = json.load(f)
+with open(variables_path, 'r') as f:
+  variables = json.load(f)
 
 #convert all tables to dataframes. and save them into tables dictionary.  
 for key in input_json:
@@ -25,12 +29,12 @@ for key in input_json:
 
 
 
-result['data'] = tables['data']   #for demo purpose
+result['data'] = tables['data']   #for demo purpose. at this point the data is in dataframe and later will be converted into json automatically
 
 #creating charts
 plt.bar(tables['data']['Analyte_Concentration__pg_mL_'], tables['data']['Calculated_Concentration__pg_mL_'], color ='maroon',
-        width = 0.4)
 #plt.show()
+        width = 0.4)
 f = io.StringIO()
 plt.savefig(f, format = "svg")
 svg_value = f.getvalue()
@@ -45,6 +49,7 @@ for key in result:
 result_plot = {}
 result_plot['tables'] = result
 result_plot['plots'] = plots
+result_plot['variables'] = variables
 #arg2 would contain the outputfile
 output_file = sys.argv[2]
 
